@@ -1,3 +1,5 @@
+import UIKit
+
 @objc(EmojiPickerInputViewManager)
 class EmojiPickerInputViewManager: RCTViewManager {
 
@@ -10,27 +12,77 @@ class EmojiPickerInputViewManager: RCTViewManager {
   }
 }
 
-class EmojiPickerInputView : UIView {
-
-  @objc var color: String = "" {
+class EmojiPickerInputView : UIView, EmojiTextFieldDelegate {
+  private let emojiButton = EmojiTextField()
+  
+  @objc var fontSize: Int = 14 {
     didSet {
-      self.backgroundColor = hexStringToUIColor(hexColor: color)
+      self.emojiButton.font = self.emojiButton.font?.withSize(CGFloat(fontSize))
     }
   }
-
-  func hexStringToUIColor(hexColor: String) -> UIColor {
-    let stringScanner = Scanner(string: hexColor)
-
-    if(hexColor.hasPrefix("#")) {
-      stringScanner.scanLocation = 1
+  
+  @objc var missingEmojiKeyboardTitle: String? {
+    didSet {
+      if let title = missingEmojiKeyboardTitle {
+        self.emojiButton.missingEmojiKeyboardTitle = title
+      }
     }
-    var color: UInt32 = 0
-    stringScanner.scanHexInt32(&color)
+  }
+  
+  @objc var missingEmojiKeyboardBody: String? {
+    didSet {
+      if let body = missingEmojiKeyboardBody {
+        self.emojiButton.missingEmojiKeyboardBody = body
+      }
+    }
+  }
+  
+  @objc var missingEmojiKeyboardButton: String? {
+    didSet {
+      if let button = missingEmojiKeyboardButton {
+        self.emojiButton.missingEmojiKeyboardButton = button
+      }
+    }
+  }
+  
+  @objc var selectedEmoji: String = "🇺🇦" {
+    didSet {
+      self.emojiButton.text = selectedEmoji
+    }
+  }
+  
+  @objc var onEmojiSelected: RCTDirectEventBlock?
+  
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    
+    emojiButton.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(emojiButton)
+    
+    emojiButton.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+    emojiButton.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+    emojiButton.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+    emojiButton.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+    
+    emojiButton.textAlignment = .center
+    emojiButton.emojiDelegate = self
+  }
+  
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+  }
+    
+  func emojiSelected(emoji: String) {
+    emojiButton.resignFirstResponder()
+    
+    guard let onEmojiSelected = onEmojiSelected else {
+      return
+    }
+    
+    let event = [
+      "emoji" : emoji,
+    ]
 
-    let r = CGFloat(Int(color >> 16) & 0x000000FF)
-    let g = CGFloat(Int(color >> 8) & 0x000000FF)
-    let b = CGFloat(Int(color) & 0x000000FF)
-
-    return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: 1)
+    onEmojiSelected(event)
   }
 }

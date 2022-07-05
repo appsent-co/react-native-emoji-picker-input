@@ -1,3 +1,4 @@
+import type { SyntheticEvent } from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -12,8 +13,15 @@ const LINKING_ERROR =
   '- You are not using Expo managed workflow\n';
 
 type EmojiPickerInputProps = {
-  color: string;
   style: ViewStyle;
+  selectedEmoji: String;
+  onEmojiSelected: (
+    event: SyntheticEvent<undefined, { emoji: string }>
+  ) => void;
+  fontSize?: Number;
+  missingEmojiKeyboardTitle?: String;
+  missingEmojiKeyboardBody?: String;
+  missingEmojiKeyboardButton?: String;
 };
 
 const ComponentName = 'EmojiPickerInputView';
