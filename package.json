@@ -1,6 +1,6 @@
 {
-  "name": "react-native-emoji-picker-input",
-  "version": "0.1.0",
+  "name": "@appsent-co/react-native-emoji-picker-input",
+  "version": "0.1.1",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

@@ -34,6 +34,7 @@ class EmojiPickerInputViewManager : SimpleViewManager<View>() {
     this.editText = editText
     editText.gravity = Gravity.CENTER
     editText.imeOptions = EditorInfo.IME_ACTION_DONE
+    editText.background.clearColorFilter()
     editText.onFocusChangeListener = OnFocusChangeListener { view, focused ->
       if (!focused) {
         hideKeyboard(reactContext, editText)
