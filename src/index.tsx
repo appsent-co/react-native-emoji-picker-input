@@ -19,6 +19,7 @@ type EmojiPickerInputProps = {
     event: SyntheticEvent<undefined, { emoji: string }>
   ) => void;
   fontSize?: Number;
+  inputAccessoryViewID?: String;
   missingEmojiKeyboardTitle?: String;
   missingEmojiKeyboardBody?: String;
   missingEmojiKeyboardButton?: String;

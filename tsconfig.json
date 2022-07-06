@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-emoji-picker-input": ["./src/index"]
+      "@appsent-co/react-native-emoji-picker-input": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

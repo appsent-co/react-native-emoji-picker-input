@@ -63,21 +63,16 @@ extension EmojiTextField : UITextFieldDelegate {
         return false
       }
       
-      text = ""
       return true
   }
   
-  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    if let oldString = textField.text {
-      let newString = oldString.replacingCharacters(in: Range(range, in: oldString)!,
-                                                      with: string)
-      
-      if (newString.containsSingleEmoji(newString)) {
-        textField.text = newString
-        emojiDelegate?.emojiSelected(emoji: newString)
-          
-        return false
-      }
+  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString: String) -> Bool {
+    let newString = replacementString
+    if (newString.containsSingleEmoji(newString)) {
+      textField.text = newString
+      emojiDelegate?.emojiSelected(emoji: newString)
+        
+      return false
     }
     return false
   }
