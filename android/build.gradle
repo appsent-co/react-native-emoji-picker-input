@@ -135,7 +135,6 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 // From node_modules
   implementation "com.vanniktech:emoji-google-compat:0.15.0"
-  implementation "androidx.emoji:emoji:1.1.0"
   implementation "androidx.emoji:emoji-bundled:1.1.0"
 }
 

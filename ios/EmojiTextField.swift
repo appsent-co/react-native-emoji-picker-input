@@ -40,7 +40,7 @@ class EmojiTextField: UITextField {
 
     
   // required for iOS 13
-  override var textInputContextIdentifier: String? { "" } // return non-nil to show the Emoji keyboard ¯\_(ツ)_/¯
+  override var textInputContextIdentifier: String? { "emoji-text-field" } // return non-nil to show the Emoji keyboard ¯\_(ツ)_/¯
   
   override var textInputMode: UITextInputMode? {
     for mode in UITextInputMode.activeInputModes {
@@ -50,20 +50,36 @@ class EmojiTextField: UITextField {
     }
     return super.textInputMode
   }
+  
+  @objc func reloadInputViewsAsync() {
+    guard isFirstResponder else {
+      return
+    }
+    
+    DispatchQueue.main.async { [weak self] in
+      self?.reloadInputViews()
+    }
+  }
 }
 
 extension EmojiTextField : UITextFieldDelegate {
   func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-      if textField.textInputMode?.primaryLanguage != "emoji" {
-        // Try to alert
-        let alertController = UIAlertController(title: missingEmojiKeyboardTitle, message: missingEmojiKeyboardBody, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: missingEmojiKeyboardButton, style: UIAlertAction.Style.default, handler: nil))
-        UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
-        
-        return false
-      }
+    if textField.textInputMode?.primaryLanguage != "emoji" {
+      // Try to alert
+      let alertController = UIAlertController(title: missingEmojiKeyboardTitle, message: missingEmojiKeyboardBody, preferredStyle: .alert)
+      alertController.addAction(UIAlertAction(title: missingEmojiKeyboardButton, style: UIAlertAction.Style.default, handler: nil))
+      UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
       
-      return true
+      return false
+    }
+      
+    return true
+  }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    // Fixes a bug where sometimes the keyboard opens instead of the emoji picker
+    // Especially when coming from a "number pad" text input
+    self.reloadInputViewsAsync()
   }
   
   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString: String) -> Bool {
@@ -74,6 +90,7 @@ extension EmojiTextField : UITextFieldDelegate {
         
       return false
     }
+    
     return false
   }
 }
